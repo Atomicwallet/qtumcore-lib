@@ -2585,7 +2585,7 @@ Base58.validCharacters = function validCharacters(chars) {
   if (buffer.Buffer.isBuffer(chars)) {
     chars = chars.toString();
   }
-  return _.all(_.map(chars, function(char) { return _.contains(ALPHABET, char); }));
+  return _.every(_.map(chars, function(char) { return _.contains(ALPHABET, char); }));
 };
 
 Base58.prototype.set = function(obj) {
@@ -3481,7 +3481,7 @@ function HDPrivateKey(arg) {
 HDPrivateKey.isValidPath = function(arg, hardened) {
   if (_.isString(arg)) {
     var indexes = HDPrivateKey._getDerivationIndexes(arg);
-    return indexes !== null && _.all(indexes, HDPrivateKey.isValidPath);
+    return indexes !== null && _.every(indexes, HDPrivateKey.isValidPath);
   }
 
   if (_.isNumber(arg)) {
@@ -3530,7 +3530,7 @@ HDPrivateKey._getDerivationIndexes = function(path) {
     return index;
   });
 
-  return _.any(indexes, isNaN) ? null : indexes;
+  return _.some(indexes, isNaN) ? null : indexes;
 };
 
 /**
@@ -4132,7 +4132,7 @@ function HDPublicKey(arg) {
 HDPublicKey.isValidPath = function(arg) {
   if (_.isString(arg)) {
     var indexes = HDPrivateKey._getDerivationIndexes(arg);
-    return indexes !== null && _.all(indexes, HDPublicKey.isValidPath);
+    return indexes !== null && _.every(indexes, HDPublicKey.isValidPath);
   }
 
   if (_.isNumber(arg)) {
@@ -4594,7 +4594,7 @@ function get(arg, keys) {
       return networks[index][key] === arg;
     };
     for (var index in networks) {
-      if (_.any(keys, containsArg)) {
+      if (_.some(keys, containsArg)) {
         return networks[index];
       }
     }
@@ -6250,7 +6250,7 @@ Interpreter.prototype.checkLockTime = function(nLockTime) {
   return true;
 }
 
-/** 
+/**
  * Based on the inner loop of bitcoind's EvalScript function
  * bitcoind commit: b5d1b1092998bc95313856d535c632ea5a8f9104
  */
@@ -10068,7 +10068,7 @@ Transaction.prototype.from = function(utxo, pubkeys, threshold) {
     });
     return this;
   }
-  var exists = _.any(this.inputs, function(input) {
+  var exists = _.some(this.inputs, function(input) {
     // TODO: Maybe prevTxId should be a string? Or defined as read only property?
     return input.prevTxId.toString('hex') === utxo.txId && input.outputIndex === utxo.outputIndex;
   });
@@ -10174,7 +10174,7 @@ Transaction.prototype.uncheckedAddInput = function(input) {
  * @return {boolean}
  */
 Transaction.prototype.hasAllUtxoInfo = function() {
-  return _.all(this.inputs.map(function(input) {
+  return _.every(this.inputs.map(function(input) {
     return !!input.output;
   }));
 };
@@ -10629,7 +10629,7 @@ Transaction.prototype.isFullySigned = function() {
       );
     }
   });
-  return _.all(_.map(this.inputs, function(input) {
+  return _.every(_.map(this.inputs, function(input) {
     return input.isFullySigned();
   }));
 };
@@ -30531,7 +30531,7 @@ module.exports = function privateDecrypt(private_key, enc, reverse) {
   } else {
     padding = 4;
   }
-  
+
   var key = parseKeys(private_key);
   var k = key.modulus.byteLength();
   if (enc.length > k || new bn(enc).cmp(key.modulus) >= 0) {
@@ -36518,13 +36518,13 @@ Script.prototype.runInContext = function (context) {
     if (!(context instanceof Context)) {
         throw new TypeError("needs a 'context' argument.");
     }
-    
+
     var iframe = document.createElement('iframe');
     if (!iframe.style) iframe.style = {};
     iframe.style.display = 'none';
-    
+
     document.body.appendChild(iframe);
-    
+
     var win = iframe.contentWindow;
     var wEval = win.eval, wExecScript = win.execScript;
 
@@ -36533,7 +36533,7 @@ Script.prototype.runInContext = function (context) {
         wExecScript.call(win, 'null');
         wEval = win.eval;
     }
-    
+
     forEach(Object_keys(context), function (key) {
         win[key] = context[key];
     });
@@ -36542,11 +36542,11 @@ Script.prototype.runInContext = function (context) {
             win[key] = context[key];
         }
     });
-    
+
     var winKeys = Object_keys(win);
 
     var res = wEval.call(win, this.code);
-    
+
     forEach(Object_keys(win), function (key) {
         // Avoid copying circular objects like `top` and `window` by only
         // updating existing context properties or new properties in the `win`
@@ -36561,9 +36561,9 @@ Script.prototype.runInContext = function (context) {
             defineProp(context, key, win[key]);
         }
     });
-    
+
     document.body.removeChild(iframe);
-    
+
     return res;
 };
 
@@ -38991,7 +38991,7 @@ module.exports = function(cmp,to){
   var c = 0;
   for(var i=0;i<cmp.length;++i){
     if(i == to.length) break;
-    c = cmp[i] < to[i]?-1:cmp[i] > to[i]?1:0;    
+    c = cmp[i] < to[i]?-1:cmp[i] > to[i]?1:0;
     if(c != 0) break;
   }
   if(c == 0){

@@ -2,7 +2,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 (function (Buffer){
 'use strict';
 
-var _ = require('lodash');
+var _ = require('lib/aliased-lodash');
 var $ = require('./util/preconditions');
 var errors = require('./errors');
 var Base58Check = require('./encoding/base58check');
